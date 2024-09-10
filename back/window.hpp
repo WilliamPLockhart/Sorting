@@ -12,6 +12,7 @@ public:
     bool init();
     bool setIcon(const char *fileLocation);
     void render();
+    void setVect(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list) { m_entities = list; }
     int windowHeight;
     int windowWidth;
     int windowY;

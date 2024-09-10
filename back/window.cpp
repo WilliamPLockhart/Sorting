@@ -80,22 +80,23 @@ bool window::setIcon(const char *fileLocation)
 
 void window::render()
 {
-    SDL_SetRenderDrawColor(m_ren.get(), 10, 10, 100, 255);
+    SDL_SetRenderDrawColor(m_ren.get(), 10, 10, 100, 255); // Set background color
     SDL_RenderClear(m_ren.get());
-    SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // White color
-    for (auto i : *m_entities)
+
+    SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // Set default color to white
+
+    for (const auto &i : *m_entities)
     {
         if (i->red)
         {
-            // Set color to red for red rectangles
-            SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255);
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255); // Set color to red
         }
         else
         {
-            // Set color to white for non-red rectangles
-            SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // Set color to white
         }
         SDL_RenderFillRect(m_ren.get(), &i->rect);
     }
+
     SDL_RenderPresent(m_ren.get());
 }

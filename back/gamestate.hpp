@@ -8,6 +8,7 @@ public:
     gamestate();
     void run();
     void update();
+    void generateVect();
 
 private:
     bool m_running;
