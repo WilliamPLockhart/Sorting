@@ -1,7 +1,7 @@
 #include "algo.hpp"
 #include <random>
 
-void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width)
+void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -16,7 +16,16 @@ void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, in
         }
         auto itOne = list->at(i);
         auto itTwo = list->at(randomNumber);
-        
+        itOne->red = true;
+        itTwo->red = true;
+
+        // pause and render here
+        if (renderFunc)
+        {
+            renderFunc();
+        }
+        SDL_Delay(1);
+
         // flips list location
         SDL_Rect temp = itOne->rect;
         itOne->rect = itTwo->rect;
@@ -26,5 +35,7 @@ void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, in
         // Set correct x coordinates after swap
         itOne->rect.x = i;
         itTwo->rect.x = randomNumber;
+        itOne->red = false;
+        itTwo->red = false;
     }
 }

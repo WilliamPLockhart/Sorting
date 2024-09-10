@@ -1,14 +1,17 @@
 #include "gamestate.hpp"
 
 gamestate::gamestate()
-    : m_winOBJ(std::make_unique<window>("Hello SDL", 1080, 720, 0)),
+    : m_winOBJ(std::make_shared<window>("Hello SDL", 1080, 720, 0)),
       m_eventOBJ(std::make_unique<events>()),
       m_entities(std::make_shared<std::vector<std::shared_ptr<item>>>()),
       m_algOBJ(std::make_unique<algo>())
 {
     generateVect();
     m_winOBJ->setVect(m_entities);
-    m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth);
+    m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth, [this]()
+                      {
+                          m_winOBJ->render(); // Call the window's render method
+                      });
     m_running = true;
 }
 
