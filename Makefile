@@ -12,7 +12,7 @@ LDFLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer
 TARGET = $(BIN_DIR)/run.exe 
 
 # Source files
-SRCS = main.cpp $(BACK_DIR)/gamestate.cpp $(BACK_DIR)/window.cpp
+SRCS = main.cpp $(BACK_DIR)/gamestate.cpp $(BACK_DIR)/window.cpp $(BACK_DIR)/events.cpp
 
 # Build target
 all: $(TARGET)

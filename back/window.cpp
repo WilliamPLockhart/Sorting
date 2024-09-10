@@ -3,12 +3,13 @@
 window::window(const std::string &title, int width, int height, bool fullscreen)
     : m_win(nullptr, SDL_DestroyWindow),
       m_ren(nullptr, SDL_DestroyRenderer),
-      m_title(title),
-      windowWidth(width),
-      windowHeight(height),
-      m_fullScreen(fullscreen),
-      m_icon(nullptr)
+      m_entities(std::make_shared<std::vector<std::shared_ptr<item>>>())
 {
+    m_title = title;
+    windowWidth = width;
+    windowHeight = height;
+    m_fullScreen = fullscreen;
+    m_icon = nullptr;
     m_running = init();
 }
 
@@ -75,4 +76,26 @@ bool window::setIcon(const char *fileLocation)
         SDL_SetWindowIcon(m_win.get(), m_icon);
         return true;
     }
+}
+
+void window::render()
+{
+    SDL_SetRenderDrawColor(m_ren.get(), 10, 10, 100, 255);
+    SDL_RenderClear(m_ren.get());
+    SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // White color
+    for (auto i : *m_entities)
+    {
+        if (i->red)
+        {
+            // Set color to red for red rectangles
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255);
+        }
+        else
+        {
+            // Set color to white for non-red rectangles
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255);
+        }
+        SDL_RenderFillRect(m_ren.get(), &i->rect);
+    }
+    SDL_RenderPresent(m_ren.get());
 }
