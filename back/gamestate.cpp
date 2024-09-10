@@ -3,9 +3,11 @@
 gamestate::gamestate()
     : m_winOBJ(std::make_unique<window>("Hello SDL", 1080, 720, 0)),
       m_eventOBJ(std::make_unique<events>()),
-      m_entities(std::make_shared<std::vector<std::shared_ptr<window::item>>>())
+      m_entities(std::make_shared<std::vector<std::shared_ptr<item>>>()),
+      m_algOBJ(std::make_unique<algo>())
 {
     generateVect();
+    m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth);
     m_winOBJ->setVect(m_entities);
     m_running = true;
 }
@@ -40,7 +42,7 @@ void gamestate::generateVect()
     }
     for (int i = 0; i < size; i++)
     {
-        std::shared_ptr<window::item> it = std::make_shared<window::item>();
+        std::shared_ptr<item> it = std::make_shared<item>();
         int rectHeight = static_cast<int>(static_cast<float>(i) * perc);
 
         it->rect = {i, height - rectHeight, 2, static_cast<int>(static_cast<float>(i) * perc)};

@@ -3,11 +3,6 @@
 class window
 {
 public:
-    struct item
-    {
-        SDL_Rect rect;
-        bool red;
-    };
     window(const std::string &title, int width, int height, bool fullscreen);
     bool init();
     bool setIcon(const char *fileLocation);

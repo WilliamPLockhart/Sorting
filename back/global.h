@@ -6,3 +6,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+struct item
+{
+    SDL_Rect rect;
+    bool red;
+};
