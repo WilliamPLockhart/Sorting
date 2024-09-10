@@ -7,8 +7,8 @@ gamestate::gamestate()
       m_algOBJ(std::make_unique<algo>())
 {
     generateVect();
-    m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth);
     m_winOBJ->setVect(m_entities);
+    m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth);
     m_running = true;
 }
 

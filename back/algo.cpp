@@ -16,7 +16,7 @@ void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, in
         }
         auto itOne = list->at(i);
         auto itTwo = list->at(randomNumber);
-
+        
         // flips list location
         SDL_Rect temp = itOne->rect;
         itOne->rect = itTwo->rect;
