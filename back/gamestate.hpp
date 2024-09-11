@@ -9,6 +9,7 @@ public:
     void run();
     void update();
     void generateVect();
+    void setButtons();
 
 private:
     bool m_running;

@@ -52,7 +52,7 @@ void algo::bubbleSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list,
             auto itTwo = list->at(j + 1);
             itOne->red = true;
             itTwo->red = true;
-            if (j % 100 == 0)
+            if (j % 10 == 0)
             {
                 if (renderFunc)
                 {

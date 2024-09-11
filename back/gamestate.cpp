@@ -6,29 +6,7 @@ gamestate::gamestate()
       m_entities(std::make_shared<std::vector<std::shared_ptr<item>>>()),
       m_algOBJ(std::make_unique<algo>())
 {
-    // adds the shuffle button the clickAble list
-    clickAble a;
-    a.desc = "shuffle";
-    a.rect = {10, 10, 30, 30};
-    // sets the vectors with the available sorting functions
-    m_listEvents.push_back(a);
-    a.desc = "bubble";
-    a.rect = {50, 10, 30, 30};
-    m_listEvents.push_back(a);
-
-    a.desc = "merge";
-    a.rect = {90, 10, 30, 30};
-    m_listEvents.push_back(a);
-
-    a.desc = "bogo";
-    a.rect = {130, 10, 30, 30};
-    m_listEvents.push_back(a);
-
-    a.desc = "quick";
-    a.rect = {170, 10, 30, 30};
-    m_listEvents.push_back(a);
-    m_winOBJ->listEvents = m_listEvents;
-    m_eventOBJ->listEvents = m_listEvents;
+    setButtons();
 
     // creates the list of values in ascending order
     generateVect();
@@ -55,6 +33,7 @@ void gamestate::run()
 
 void gamestate::update()
 {
+    bool sorted = false;
     if (m_eventOBJ->buttonFlag)
     {
         // end app
@@ -83,6 +62,7 @@ void gamestate::update()
                                   {
                                       m_winOBJ->render(); // Call the window's render method
                                   } });
+            sorted = true;
         }
         // merge sort
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::merge)
@@ -94,6 +74,7 @@ void gamestate::update()
                                   {
                                       m_winOBJ->render(); // Call the window's render method
                                   } }, 0, m_winOBJ->windowWidth - 1);
+            sorted = true;
         }
         // bogo sort
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::bogo)
@@ -116,6 +97,7 @@ void gamestate::update()
                                   {
                                       m_winOBJ->render(); // Call the window's render method
                                   } });
+            sorted = true;
         }
         // if buttonFlag is not blank and the condition is not listed
         else
@@ -125,6 +107,12 @@ void gamestate::update()
         if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
         {
             m_eventOBJ->buttonFlag = events::eventButtonType::nothing;
+        }
+        // renders the green for sorted
+        if (sorted)
+        {
+            m_winOBJ->render(1, 1);
+            SDL_Delay(600);
         }
     }
 }
@@ -149,4 +137,31 @@ void gamestate::generateVect()
         it->red = false;
         m_entities->push_back(it);
     }
+}
+
+void gamestate::setButtons()
+{
+    // adds the shuffle button the clickAble list
+    clickAble a;
+    a.desc = "shuffle";
+    a.rect = {10, 10, 30, 30};
+    // sets the vectors with the available sorting functions
+    m_listEvents.push_back(a);
+    a.desc = "bubble";
+    a.rect = {50, 10, 30, 30};
+    m_listEvents.push_back(a);
+
+    a.desc = "merge";
+    a.rect = {90, 10, 30, 30};
+    m_listEvents.push_back(a);
+
+    a.desc = "quick";
+    a.rect = {130, 10, 30, 30};
+    m_listEvents.push_back(a);
+
+    a.desc = "bogo";
+    a.rect = {170, 10, 30, 30};
+    m_listEvents.push_back(a);
+    m_winOBJ->listEvents = m_listEvents;
+    m_eventOBJ->listEvents = m_listEvents;
 }

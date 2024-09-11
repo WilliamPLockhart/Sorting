@@ -7,7 +7,7 @@ public:
     window(const std::string &title, int width, int height, bool fullscreen);
     bool init();
     bool setIcon(const char *fileLocation);
-    void render(bool sound = false);
+    void render(bool sound = false, bool sorted = false);
 
     //"normal" functions
     void
