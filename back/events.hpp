@@ -13,7 +13,9 @@ public:
         bubble = 3,
         merge = 4,
         bogo = 5,
-        quick = 6
+        quick = 6,
+        insertion = 7,
+        selection = 8
     };
     events();
     void handleEvents();

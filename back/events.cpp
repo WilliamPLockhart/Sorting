@@ -45,6 +45,14 @@ void events::handleEvents()
                     {
                         buttonFlag = quick;
                     }
+                    else if (i.desc == "selection")
+                    {
+                        buttonFlag = selection;
+                    }
+                    else if (i.desc == "insertion")
+                    {
+                        buttonFlag = insertion;
+                    }
                 }
             }
         }

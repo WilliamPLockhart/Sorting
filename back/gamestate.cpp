@@ -99,6 +99,40 @@ void gamestate::update()
                                   } });
             sorted = true;
         }
+        // insertion
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::insertion)
+        {
+            m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, [this]()
+                                {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+            sorted = true;
+        }
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::selection)
+        {
+            m_algOBJ->selection(m_entities, m_winOBJ->windowWidth, [this]()
+                                {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+            sorted = true;
+        }
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::insertion)
+        {
+            m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, [this]()
+                                {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+            sorted = true;
+        }
         // if buttonFlag is not blank and the condition is not listed
         else
         {
@@ -149,6 +183,16 @@ void gamestate::setButtons()
     m_listEvents.push_back(a);
     a.desc = "bubble";
     a.rect = {50, 10, 30, 30};
+    m_listEvents.push_back(a);
+
+    m_listEvents.push_back(a);
+    a.desc = "selection";
+    a.rect = {50, 50, 30, 30};
+    m_listEvents.push_back(a);
+
+    m_listEvents.push_back(a);
+    a.desc = "insertion";
+    a.rect = {50, 90, 30, 30};
     m_listEvents.push_back(a);
 
     a.desc = "merge";

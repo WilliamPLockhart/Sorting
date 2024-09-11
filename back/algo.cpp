@@ -4,6 +4,7 @@
 // shuffle
 void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
+    std::cout << "shuffling!..." << std::endl;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, width - 1);
@@ -44,6 +45,7 @@ void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, in
 // bubble sort
 void algo::bubbleSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
+    std::cout << "bubble sort" << std::endl;
     for (int i = 0; i < width - 1; i++)
     {
         for (int j = 0; j < width - i - 1; j++)
@@ -83,6 +85,7 @@ void algo::bubbleSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list,
 // merge sort
 void algo::mergeSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc, int left, int right)
 {
+    std::cout << "merge sort" << std::endl;
     if (left < right)
     {
         int mid = left + (right - left) / 2;
@@ -165,6 +168,7 @@ void algo::merge(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int 
 // bogo sort
 void algo::bogo(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
+    std::cout << "bogo sort" << std::endl;
     bool run = true;
     bool order = true;
     uint64_t startTime = SDL_GetTicks64();
@@ -206,7 +210,7 @@ void algo::bogo(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int w
 // quick sort
 void algo::quick(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int high, std::function<void()> renderFunc)
 {
-
+    std::cout << "quick sort" << std::endl;
     if (low < high)
     {
         int pi = partition(list, renderFunc, low, high); // Partitioning index
@@ -277,4 +281,86 @@ int algo::partition(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, s
     itTwo->red = false;
 
     return i + 1;
+}
+
+// selection sort
+void algo::selection(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
+{
+    std::cout << "selection sort" << std::endl;
+    for (int i = 0; i < width - 1; ++i)
+    {
+        // Find the minimum element in unsorted part
+        int minIndex = i;
+        for (int j = i + 1; j < width; ++j)
+        {
+            if (list->at(j)->rect.y > list->at(minIndex)->rect.y)
+            {
+                minIndex = j;
+                if (renderFunc)
+                {
+                    renderFunc();
+                }
+            }
+        }
+
+        // Swap the found minimum element with the first element
+        if (minIndex != i)
+        {
+
+            list->at(i)->red = true;
+            list->at(minIndex)->red = true;
+
+            SDL_Rect rectOne = list->at(i)->rect;
+            SDL_Rect rectTwo = list->at(minIndex)->rect;
+
+            // Swap the positions of rects
+
+            rectOne.x = minIndex;
+            rectTwo.x = i;
+            list->at(i)->rect = rectTwo;
+            list->at(minIndex)->rect = rectOne;
+            if (renderFunc)
+            {
+                renderFunc();
+            }
+
+            list->at(i)->red = false;
+            list->at(minIndex)->red = false;
+        }
+    }
+}
+
+// insertion sort
+void algo::insertion(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
+{
+    std::cout << "insertion sort" << std::endl;
+    for (int i = 1; i < width; ++i)
+    {
+        auto keyItem = list->at(i);
+        auto keyRect = keyItem->rect;
+        int j = i - 1;
+
+        // Shift elements of list[0..i-1], that are greater than keyRect.h,
+        // to one position ahead of their current position
+        while (j >= 0 && list->at(j)->rect.h > keyRect.h)
+        {
+            SDL_Rect rectOne = list->at(j + 1)->rect;
+            SDL_Rect rectTwo = list->at(j)->rect;
+            list->at(j + 1)->red = true;
+            list->at(j)->red = true;
+            if (renderFunc)
+            {
+                renderFunc();
+            }
+            list->at(j + 1)->red = false;
+            list->at(j)->red = false;
+            rectOne.x = j;
+            rectTwo.x = j + 1;
+            list->at(j + 1)->rect = rectTwo;
+            list->at(j)->rect = rectOne;
+            --j;
+        }
+        // Place keyRect at the correct position
+        list->at(j + 1)->rect.h = keyRect.h;
+    }
 }
