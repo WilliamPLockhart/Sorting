@@ -10,11 +10,20 @@ gamestate::gamestate()
     clickAble a;
     a.desc = "shuffle";
     a.rect = {10, 10, 30, 30};
-    // sets the vectors
+    // sets the vectors with the available sorting functions
     m_listEvents.push_back(a);
-    a.desc = "bubble sort";
+    a.desc = "bubble";
     a.rect = {50, 10, 30, 30};
     m_listEvents.push_back(a);
+
+    a.desc = "merge";
+    a.rect = {90, 10, 30, 30};
+    m_listEvents.push_back(a);
+
+    a.desc = "bogo";
+    a.rect = {130, 10, 30, 30};
+    m_listEvents.push_back(a);
+
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 
@@ -61,6 +70,39 @@ void gamestate::update()
                                       m_winOBJ->render(); // Call the window's render method
                                   } });
         }
+        // bubble sort
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::bubble)
+        {
+            m_algOBJ->bubbleSort(m_entities, m_winOBJ->windowWidth, [this]()
+                                 {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+        }
+        // merge sort
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::merge)
+        {
+            m_algOBJ->mergeSort(m_entities, m_winOBJ->windowWidth, [this]()
+                                {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } }, 0, m_winOBJ->windowWidth - 1);
+        }
+        // bogo sort
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::bogo)
+        {
+            m_algOBJ->bogo(m_entities, m_winOBJ->windowWidth, [this]()
+                           {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+        }
         // if buttonFlag is not blank and the condition is not listed
         else
         {
@@ -77,6 +119,7 @@ void gamestate::generateVect()
 {
     int size = m_winOBJ->windowWidth;
     int height = m_winOBJ->windowHeight;
+
     float perc = 1;
     if (height < size)
     {

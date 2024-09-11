@@ -29,6 +29,18 @@ void events::handleEvents()
                     {
                         buttonFlag = shuffle;
                     }
+                    else if (i.desc == "bubble")
+                    {
+                        buttonFlag = bubble;
+                    }
+                    else if (i.desc == "merge")
+                    {
+                        buttonFlag = merge;
+                    }
+                    else if (i.desc == "bogo")
+                    {
+                        buttonFlag = bogo;
+                    }
                 }
             }
         }

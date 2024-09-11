@@ -18,4 +18,5 @@ struct clickAble
     SDL_Rect rect;
     std::shared_ptr<SDL_Texture> tex = std::shared_ptr<SDL_Texture>(nullptr, SDL_DestroyTexture);
     std::string desc = "";
+    int r = -1, g, b;
 };

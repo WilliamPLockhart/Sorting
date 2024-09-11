@@ -9,7 +9,10 @@ public:
 
         nothing = 0,
         end = 1,
-        shuffle = 2
+        shuffle = 2,
+        bubble = 3,
+        merge = 4,
+        bogo = 5
     };
     events();
     void handleEvents();
