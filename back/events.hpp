@@ -6,9 +6,10 @@ class events
 public:
     enum eventButtonType
     {
-        end = 1,
-        nothing = 0
 
+        nothing = 0,
+        end = 1,
+        shuffle = 2
     };
     events();
     void handleEvents();

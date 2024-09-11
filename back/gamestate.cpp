@@ -12,6 +12,9 @@ gamestate::gamestate()
     a.rect = {10, 10, 30, 30};
     // sets the vectors
     m_listEvents.push_back(a);
+    a.desc = "bubble sort";
+    a.rect = {50, 10, 30, 30};
+    m_listEvents.push_back(a);
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 
@@ -21,12 +24,6 @@ gamestate::gamestate()
     // gives the window object the list of values and positions
     m_winOBJ->setVect(m_entities);
 
-    // shuffles the list TODO, change this location to update
-    m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth, [this]()
-                      {
-                          m_eventOBJ->handleEvents();
-                          m_winOBJ->render(); // Call the window's render method
-                      });
     m_running = true;
 }
 
@@ -36,15 +33,43 @@ void gamestate::run()
     {
         m_eventOBJ->handleEvents();
         update();
+        if (!m_running)
+        {
+            break;
+        }
         m_winOBJ->render();
     }
 }
 
 void gamestate::update()
 {
-    if (m_eventOBJ->buttonFlag == events::eventButtonType::end)
+    if (m_eventOBJ->buttonFlag)
     {
-        m_running = false;
+        // end app
+        if (m_eventOBJ->buttonFlag == events::eventButtonType::end)
+        {
+            m_running = false;
+        }
+        // shuffle array
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::shuffle)
+        {
+            m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth, [this]()
+                              {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+        }
+        // if buttonFlag is not blank and the condition is not listed
+        else
+        {
+            std::cout << "m_eventOBJ->buttonFlag value: " << m_eventOBJ->buttonFlag << " not defined" << std::endl;
+        }
+        if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+        {
+            m_eventOBJ->buttonFlag = events::eventButtonType::nothing;
+        }
     }
 }
 
