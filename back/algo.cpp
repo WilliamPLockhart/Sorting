@@ -162,6 +162,7 @@ void algo::merge(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int 
     }
 }
 
+// bogo sort
 void algo::bogo(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
     bool run = true;
@@ -200,4 +201,80 @@ void algo::bogo(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int w
             run = false; // Exit the while loop
         }
     }
+}
+
+// quick sort
+void algo::quick(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int high, std::function<void()> renderFunc)
+{
+
+    if (low < high)
+    {
+        int pi = partition(list, renderFunc, low, high); // Partitioning index
+        quick(list, low, pi - 1, renderFunc);            // Recursively sort elements before partition
+        quick(list, pi + 1, high, renderFunc);           // Recursively sort elements after partition
+    }
+}
+
+int algo::partition(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, std::function<void()> renderFunc, int low, int high)
+{
+    // sets pivot and updates
+    int pivot = list->at(high)->rect.y;
+    int i = low - 1;
+
+    for (int j = low; j < high; ++j)
+    {
+        if (list->at(j)->rect.y > pivot)
+        {
+            ++i;
+
+            // Swapping elements at index i and j
+            auto itOne = list->at(i);
+            auto itTwo = list->at(j);
+
+            // Swap their SDL_Rect values
+            SDL_Rect temp = itOne->rect;
+            itOne->rect = itTwo->rect;
+            itTwo->rect = temp;
+
+            // Update x coordinates after swap
+            itOne->rect.x = i;
+            itTwo->rect.x = j;
+
+            itOne->red = true;
+            itTwo->red = true;
+
+            if (renderFunc)
+            {
+                renderFunc();
+            }
+            itOne->red = false;
+            itTwo->red = false;
+        }
+    }
+
+    // Swap the pivot element with the element at i + 1
+    auto itOne = list->at(i + 1);
+    auto itTwo = list->at(high);
+
+    // Swap their SDL_Rect values
+    SDL_Rect temp = itOne->rect;
+    itOne->rect = itTwo->rect;
+    itTwo->rect = temp;
+
+    // Update x coordinates after swap
+    itOne->rect.x = i + 1;
+    itTwo->rect.x = high;
+
+    // Set red flag for the swapped elements
+    itOne->red = true;
+    itTwo->red = true;
+
+    if (renderFunc)
+    {
+        renderFunc();
+    }
+    itOne->red = false;
+    itTwo->red = false;
+
+    return i + 1;
 }

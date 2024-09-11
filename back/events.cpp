@@ -41,6 +41,10 @@ void events::handleEvents()
                     {
                         buttonFlag = bogo;
                     }
+                    else if (i.desc == "quick")
+                    {
+                        buttonFlag = quick;
+                    }
                 }
             }
         }

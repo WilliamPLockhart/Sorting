@@ -12,7 +12,8 @@ public:
         shuffle = 2,
         bubble = 3,
         merge = 4,
-        bogo = 5
+        bogo = 5,
+        quick = 6
     };
     events();
     void handleEvents();

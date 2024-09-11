@@ -24,6 +24,9 @@ gamestate::gamestate()
     a.rect = {130, 10, 30, 30};
     m_listEvents.push_back(a);
 
+    a.desc = "quick";
+    a.rect = {170, 10, 30, 30};
+    m_listEvents.push_back(a);
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 
@@ -97,6 +100,17 @@ void gamestate::update()
         {
             m_algOBJ->bogo(m_entities, m_winOBJ->windowWidth, [this]()
                            {
+                                  m_eventOBJ->handleEvents();
+                                  if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+                                  {
+                                      m_winOBJ->render(); // Call the window's render method
+                                  } });
+        }
+        // quick
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::quick)
+        {
+            m_algOBJ->quick(m_entities, 0, m_winOBJ->windowWidth - 1, [this]()
+                            {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
                                   {
