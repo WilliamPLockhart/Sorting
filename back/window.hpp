@@ -3,17 +3,28 @@
 class window
 {
 public:
+    // sdl
     window(const std::string &title, int width, int height, bool fullscreen);
     bool init();
     bool setIcon(const char *fileLocation);
-    void render();
-    void setVect(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list) { m_entities = list; }
+    void render(bool sound = false);
+
+    //"normal" functions
+    void
+    setVect(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list)
+    {
+        m_entities = list;
+    }
+
+    // variables
     int windowHeight;
     int windowWidth;
     int windowY;
     int windowX;
+    std::vector<clickAble> listEvents;
 
 private:
+    // window stuff
     bool m_running;
     bool m_winScreen = false;
     std::shared_ptr<std::vector<std::shared_ptr<item>>> m_entities;

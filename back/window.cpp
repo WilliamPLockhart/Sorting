@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include <fstream>
 
 window::window(const std::string &title, int width, int height, bool fullscreen)
     : m_win(nullptr, SDL_DestroyWindow),
@@ -42,17 +43,6 @@ bool window::init()
             return false;
         }
     }
-    // ensures mixer is working
-    if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == 0)
-    {
-        std::cout << "Failed to initialize SDL2_mixer: " << Mix_GetError() << std::endl;
-        return false;
-    }
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-    {
-        std::cout << "Failed to open audio: " << Mix_GetError() << std::endl;
-        return false;
-    }
 
     // sets icon
     const char *file = "assets/logo.bmp";
@@ -78,7 +68,7 @@ bool window::setIcon(const char *fileLocation)
     }
 }
 
-void window::render()
+void window::render(bool sound)
 {
     SDL_SetRenderDrawColor(m_ren.get(), 10, 10, 100, 255); // Set background color
     SDL_RenderClear(m_ren.get());
@@ -95,7 +85,25 @@ void window::render()
         {
             SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // Set color to white
         }
+        if (sound)
+        {
+        }
         SDL_RenderFillRect(m_ren.get(), &i->rect);
+    }
+    for (auto i : listEvents)
+    {
+        if (i.tex)
+        {
+            // to do render the texture
+        }
+        else
+        {
+            if (i.desc == "shuffle")
+            {
+                SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255); // Set color to red
+            }
+            SDL_RenderFillRect(m_ren.get(), &i.rect);
+        }
     }
 
     SDL_RenderPresent(m_ren.get());

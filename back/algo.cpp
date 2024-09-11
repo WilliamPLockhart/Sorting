@@ -19,7 +19,7 @@ void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, in
         itOne->red = true;
         itTwo->red = true;
 
-        // pause and render here
+        //  pause and render here
         if (renderFunc)
         {
             renderFunc();

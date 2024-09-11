@@ -2,7 +2,6 @@
 #include "window.hpp"
 #include "events.hpp"
 #include "algo.hpp"
-
 class gamestate
 {
 public:
@@ -17,4 +16,5 @@ private:
     std::shared_ptr<std::vector<std::shared_ptr<item>>> m_entities;
     std::shared_ptr<window> m_winOBJ;
     std::unique_ptr<events> m_eventOBJ;
+    std::vector<clickAble> m_listEvents;
 };

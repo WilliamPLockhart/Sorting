@@ -16,6 +16,7 @@ public:
 
     // public vars
     eventButtonType buttonFlag;
+    std::vector<clickAble> listEvents;
 
 private:
     std::unique_ptr<SDL_Event> m_event = std::make_unique<SDL_Event>();
