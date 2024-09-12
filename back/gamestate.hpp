@@ -10,6 +10,7 @@ public:
     void update();
     void generateVect();
     void setButtons();
+    void callAlgo(bool sorted);
 
 private:
     bool m_running;

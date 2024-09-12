@@ -15,7 +15,9 @@ public:
         bogo = 5,
         quick = 6,
         insertion = 7,
-        selection = 8
+        selection = 8,
+        radix = 9,
+        bitonic = 10
     };
     events();
     void handleEvents();

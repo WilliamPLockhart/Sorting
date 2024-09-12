@@ -4,7 +4,6 @@
 // shuffle
 void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
-    std::cout << "shuffling!..." << std::endl;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, width - 1);
@@ -45,7 +44,6 @@ void algo::shuffle(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, in
 // bubble sort
 void algo::bubbleSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
-    std::cout << "bubble sort" << std::endl;
     for (int i = 0; i < width - 1; i++)
     {
         for (int j = 0; j < width - i - 1; j++)
@@ -85,7 +83,6 @@ void algo::bubbleSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list,
 // merge sort
 void algo::mergeSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc, int left, int right)
 {
-    std::cout << "merge sort" << std::endl;
     if (left < right)
     {
         int mid = left + (right - left) / 2;
@@ -168,7 +165,6 @@ void algo::merge(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int 
 // bogo sort
 void algo::bogo(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
-    std::cout << "bogo sort" << std::endl;
     bool run = true;
     bool order = true;
     uint64_t startTime = SDL_GetTicks64();
@@ -210,7 +206,6 @@ void algo::bogo(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int w
 // quick sort
 void algo::quick(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int high, std::function<void()> renderFunc)
 {
-    std::cout << "quick sort" << std::endl;
     if (low < high)
     {
         int pi = partition(list, renderFunc, low, high); // Partitioning index
@@ -286,7 +281,6 @@ int algo::partition(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, s
 // selection sort
 void algo::selection(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
-    std::cout << "selection sort" << std::endl;
     for (int i = 0; i < width - 1; ++i)
     {
         // Find the minimum element in unsorted part
@@ -333,7 +327,6 @@ void algo::selection(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, 
 // insertion sort
 void algo::insertion(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
 {
-    std::cout << "insertion sort" << std::endl;
     for (int i = 1; i < width; ++i)
     {
         auto keyItem = list->at(i);
@@ -363,4 +356,127 @@ void algo::insertion(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, 
         // Place keyRect at the correct position
         list->at(j + 1)->rect.h = keyRect.h;
     }
+}
+
+// radix sort
+void algo::radix(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
+{
+    int max = getMax(list);
+    // Find the maximum number to
+    // know number of digits
+
+    // Do counting sort for every digit.
+    // Note that instead of passing digit
+    // number, exp is passed. exp is 10^i
+    // where i is current digit number
+    for (int exp = 1; max / exp > 0; exp *= 10)
+        countSort(list, width, exp, renderFunc);
+}
+
+int algo::getMax(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list)
+{
+    int max = 0;
+    for (auto i : *list)
+    {
+        if (i->rect.h > max)
+        {
+            max = i->rect.h;
+        }
+    }
+    return max;
+}
+
+void algo::countSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, int exp, std::function<void()> renderFunc)
+{
+    // Output array for sorted items
+    std::vector<std::shared_ptr<item>> output(width);
+    int count[10] = {0};
+
+    // Store the count of occurrences based on the current digit
+    for (int i = 0; i < width; i++)
+    {
+        count[(list->at(i)->rect.h / exp) % 10]++;
+    }
+
+    // Change count[i] to contain the actual position of this digit in the output array
+    for (int i = 1; i < 10; i++)
+    {
+        count[i] += count[i - 1];
+    }
+
+    // Build the output array from the original list based on the current digit
+    for (int i = width - 1; i >= 0; i--)
+    {
+        int index = (list->at(i)->rect.h / exp) % 10;
+        output[count[index] - 1] = list->at(i); // Place the item in the correct position
+        count[index]--;
+    }
+
+    // Copy the sorted output back to the original list
+    for (int i = 0; i < width; i++)
+    {
+        list->at(i) = output[i];
+
+        // Update rect.x to match the new index in the list
+        list->at(i)->rect.x = i; // Assign rect.x to the index i directly
+
+        // Visualize the sorting process by highlighting active elements
+        list->at(i)->red = true; // Highlight item as 'active'
+        if (renderFunc)
+        {
+            renderFunc();
+        }
+        list->at(i)->red = false; // Turn off the highlight after rendering
+    }
+}
+
+// bitonic sort
+void algo::bitonicMerge(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int cnt, bool increasing, std::function<void()> renderFunc)
+{
+    if (cnt > 1)
+    {
+        int k = cnt / 2;
+        for (int i = low; i < low + k; ++i)
+        {
+            if ((increasing && list->at(i)->rect.h > list->at(i + k)->rect.h) || (!increasing && list->at(i)->rect.h < list->at(i + k)->rect.h))
+            {
+                SDL_Rect rectOne = list->at(i + k)->rect;
+                SDL_Rect rectTwo = list->at(i)->rect;
+
+                // sets colors
+                list->at(i + k)->red = true;
+                list->at(i)->red = true;
+                if (renderFunc)
+                {
+                    renderFunc();
+                }
+                list->at(i + k)->red = false;
+                list->at(i)->red = false;
+
+                // finishes swap
+                rectOne.x = i;
+                rectTwo.x = i + k;
+                list->at(i + k)->rect = rectTwo;
+                list->at(i)->rect = rectOne;
+            }
+        }
+        bitonicMerge(list, low, k, increasing, renderFunc);
+        bitonicMerge(list, low + k, k, increasing, renderFunc);
+    }
+}
+
+void algo::bitonicSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int cnt, bool increasing, std::function<void()> renderFunc)
+{
+    if (cnt > 1)
+    {
+        int k = cnt / 2;
+        bitonicSort(list, low, k, true, renderFunc);
+        bitonicSort(list, low + k, k, false, renderFunc);
+        bitonicMerge(list, low, cnt, increasing, renderFunc);
+    }
+}
+
+void algo::bitonicSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
+{
+    bitonicSort(list, 0, width, true, renderFunc);
 }

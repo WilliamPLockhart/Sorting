@@ -53,6 +53,14 @@ void events::handleEvents()
                     {
                         buttonFlag = insertion;
                     }
+                    else if (i.desc == "radix")
+                    {
+                        buttonFlag = radix;
+                    }
+                    else if (i.desc == "bitonic")
+                    {
+                        buttonFlag = bitonic;
+                    }
                 }
             }
         }
