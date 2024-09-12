@@ -1,5 +1,6 @@
 #pragma once
 #include "global.h"
+#include <SDL2/SDL_ttf.h>
 class window
 {
 public:
@@ -8,13 +9,12 @@ public:
     bool init();
     bool setIcon(const char *fileLocation);
     void render(bool sound = false, bool sorted = false);
-
+    void quit();
+    // sdl text
+    void renderText();
+    int findFontSize(std::string &text, SDL_Rect rect);
     //"normal" functions
-    void
-    setVect(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list)
-    {
-        m_entities = list;
-    }
+    void setVect(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list) { m_entities = list; }
 
     // variables
     int windowHeight;
@@ -33,4 +33,6 @@ private:
     bool m_fullScreen;
     std::string m_title;
     SDL_Surface *m_icon;
+    // text stuff
+    TTF_Font *m_font;
 };

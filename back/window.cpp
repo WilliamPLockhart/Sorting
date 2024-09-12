@@ -11,9 +11,16 @@ window::window(const std::string &title, int width, int height, bool fullscreen)
     windowHeight = height;
     m_fullScreen = fullscreen;
     m_icon = nullptr;
-    m_running = init();
+    if (init())
+    {
+        m_running = TTF_Init();
+        m_font = TTF_OpenFont("assets/fonts/videoHome.ttf", 24);
+        if (!m_font)
+        {
+            std::cout << "failed font" << std::endl;
+        }
+    }
 }
-
 bool window::init()
 {
     // defines window, renderer, audio, and icon
@@ -120,6 +127,45 @@ void window::render(bool sound, bool sorted)
             }
         }
     }
-
+    renderText();
     SDL_RenderPresent(m_ren.get());
+}
+
+void window::quit()
+{
+    SDL_Quit();
+    TTF_Quit();
+}
+
+void window::renderText()
+{
+
+    // creates and frees textSurface
+    SDL_Color textColor = {0, 0, 0, 255};
+    SDL_Surface *textSurface = TTF_RenderText_Solid(m_font, "Hello, SDL2_ttf!", textColor);
+    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(m_ren.get(), textSurface);
+    SDL_FreeSurface(textSurface);
+    // text itself
+    int textWidth, textHeight;
+    SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
+    SDL_Rect textRect = {320 - textWidth / 2, 240 - textHeight / 2, textWidth, textHeight};
+
+    // Render the text
+    SDL_RenderCopy(m_ren.get(), textTexture, NULL, &textRect);
+}
+
+int window::findFontSize(std::string &text, SDL_Rect rect)
+{
+    int fontSize = 30;
+    TTF_CloseFont(m_font);
+    while (fontSize > 0)
+    {
+        m_font = TTF_OpenFont("assets/fonts/videoHome.ttf", fontSize);
+        if (!m_font)
+        {
+            std::cout << "failed to open font!... findFontSize " << TTF_GetError() << std::endl;
+            return -1;
+        }
+        SDL_Color color = {0, 0, 0, 255};
+        }
 }
