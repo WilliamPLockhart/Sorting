@@ -11,6 +11,7 @@ public:
     void render(bool sound = false, bool sorted = false);
     void quit();
     // sdl text
+    void addTime(std::string sort, Uint64 finishTime);
     void renderText();
     int findFontSize(std::string &text, SDL_Rect rect);
     //"normal" functions
@@ -25,6 +26,7 @@ public:
 
 private:
     // window stuff
+    std::string m_text;
     bool m_running;
     bool m_winScreen = false;
     std::shared_ptr<std::vector<std::shared_ptr<item>>> m_entities;

@@ -34,7 +34,14 @@ void gamestate::run()
 void gamestate::update()
 {
     bool sorted = false;
-    callAlgo(sorted);
+    if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+    {
+        callAlgo(sorted);
+    }
+    else
+    {
+        m_running = false;
+    }
 }
 
 void gamestate::generateVect()
@@ -97,9 +104,10 @@ void gamestate::setButtons()
     a.rect = {130, 50, 30, 30};
     m_listEvents.push_back(a);
 
-    a.desc = "bitonic";
-    a.rect = {90, 90, 30, 30};
+    a.desc = "custom";
+    a.rect = {200, 50, 30, 30};
     m_listEvents.push_back(a);
+
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 }
@@ -108,6 +116,8 @@ void gamestate::callAlgo(bool sorted)
 {
     if (m_eventOBJ->buttonFlag)
     {
+        Uint64 startTime = SDL_GetTicks64();
+        std::string sortTitle;
         // end app
         if (m_eventOBJ->buttonFlag == events::eventButtonType::end)
         {
@@ -116,115 +126,105 @@ void gamestate::callAlgo(bool sorted)
         // shuffle array
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::shuffle)
         {
+            sortTitle = "Shuffle";
             m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth, [this]()
                               {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  {  m_winOBJ->render(); } });
         }
         // bubble sort
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::bubble)
         {
+            sortTitle = "Bubble";
             m_algOBJ->bubbleSort(m_entities, m_winOBJ->windowWidth, [this]()
                                  {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  {m_winOBJ->render();} });
             sorted = true;
         }
         // merge sort
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::merge)
         {
+            sortTitle = "Merge";
             m_algOBJ->mergeSort(m_entities, m_winOBJ->windowWidth, [this]()
                                 {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } }, 0, m_winOBJ->windowWidth - 1);
+                                  {m_winOBJ->render();} }, 0, m_winOBJ->windowWidth - 1);
             sorted = true;
         }
         // bogo sort
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::bogo)
         {
+            sortTitle = "Bogo";
             m_algOBJ->bogo(m_entities, m_winOBJ->windowWidth, [this]()
                            {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  { m_winOBJ->render();} });
         }
         // quick
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::quick)
         {
+            sortTitle = "Quick";
             m_algOBJ->quick(m_entities, 0, m_winOBJ->windowWidth - 1, [this]()
                             {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  {m_winOBJ->render();  } });
             sorted = true;
         }
         // insertion
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::insertion)
         {
+            sortTitle = "Insertion";
             m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, [this]()
                                 {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                    { m_winOBJ->render(); } });
             sorted = true;
         }
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::selection)
         {
+            sortTitle = "Selection";
             m_algOBJ->selection(m_entities, m_winOBJ->windowWidth, [this]()
                                 {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  {m_winOBJ->render();} });
             sorted = true;
         }
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::insertion)
         {
+            sortTitle = "Insertion";
             m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, [this]()
                                 {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  { m_winOBJ->render(); } });
             sorted = true;
         }
         else if (m_eventOBJ->buttonFlag == events::eventButtonType::radix)
         {
+            sortTitle = "Radix";
             m_algOBJ->radix(m_entities, m_winOBJ->windowWidth, [this]()
                             {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  { m_winOBJ->render();} });
             sorted = true;
         }
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::bitonic)
+        else if (m_eventOBJ->buttonFlag == events::eventButtonType::custom)
         {
-            m_algOBJ->bitonicSort(m_entities, m_winOBJ->windowWidth, [this]()
-                                  {
+            sortTitle = "Qucik Merge";
+            m_algOBJ->custom(m_entities, 0, m_winOBJ->windowWidth, [this]()
+                             {
                                   m_eventOBJ->handleEvents();
                                   if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-                                  {
-                                      m_winOBJ->render(); // Call the window's render method
-                                  } });
+                                  {m_winOBJ->render();} });
             sorted = true;
         }
         // if buttonFlag is not blank and the condition is not listed
@@ -239,6 +239,13 @@ void gamestate::callAlgo(bool sorted)
         // renders the green for sorted
         if (sorted)
         {
+            if (sortTitle.length() > 0)
+            {
+                sortTitle += " Sort";
+            }
+            Uint64 endtime = SDL_GetTicks64();
+            endtime = endtime - startTime;
+            m_winOBJ->addTime(sortTitle, endtime);
             m_winOBJ->render(1, 1);
             SDL_Delay(600);
         }

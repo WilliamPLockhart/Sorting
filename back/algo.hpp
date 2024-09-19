@@ -33,11 +33,8 @@ public:
     void radix(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc);
     int getMax(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list);
     void countSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, int exp, std::function<void()> renderFunc);
-
-    // bitonic
-    void bitonicMerge(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int cnt, bool increasing, std::function<void()> renderFunc);
-    void bitonicSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int cnt, bool increasing, std::function<void()> renderFunc);
-    void bitonicSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc); // this one called in main
+    void custom(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int start, int n, std::function<void()> renderFunc);
+    void customHelper(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int start, int n, std::function<void()> renderFunc);
 
 private:
 };

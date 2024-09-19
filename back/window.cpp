@@ -139,10 +139,14 @@ void window::quit()
 
 void window::renderText()
 {
+    if (m_text == "")
+    {
 
+        return;
+    }
     // creates and frees textSurface
-    SDL_Color textColor = {0, 0, 0, 255};
-    SDL_Surface *textSurface = TTF_RenderText_Solid(m_font, "Hello, SDL2_ttf!", textColor);
+    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Surface *textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(m_ren.get(), textSurface);
     SDL_FreeSurface(textSurface);
     // text itself
@@ -152,6 +156,21 @@ void window::renderText()
 
     // Render the text
     SDL_RenderCopy(m_ren.get(), textTexture, NULL, &textRect);
+}
+
+void window::addTime(std::string sort, Uint64 finishTime)
+{
+
+    if (sort.length() < 0)
+    {
+        m_text = "";
+        return;
+    }
+    else
+    {
+        float finishTimeInSeconds = static_cast<float>(finishTime) / 1000.0f;
+        m_text = sort + ": time: " + std::to_string(finishTimeInSeconds);
+    }
 }
 
 int window::findFontSize(std::string &text, SDL_Rect rect)
@@ -167,5 +186,5 @@ int window::findFontSize(std::string &text, SDL_Rect rect)
             return -1;
         }
         SDL_Color color = {0, 0, 0, 255};
-        }
+    }
 }

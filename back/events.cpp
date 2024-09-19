@@ -57,9 +57,9 @@ void events::handleEvents()
                     {
                         buttonFlag = radix;
                     }
-                    else if (i.desc == "bitonic")
+                    else if (i.desc == "custom")
                     {
-                        buttonFlag = bitonic;
+                        buttonFlag = custom;
                     }
                 }
             }

@@ -430,53 +430,20 @@ void algo::countSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, 
     }
 }
 
-// bitonic sort
-void algo::bitonicMerge(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int cnt, bool increasing, std::function<void()> renderFunc)
+void algo::custom(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int start, int n, std::function<void()> renderFunc)
 {
-    if (cnt > 1)
+    int k = n / 2;
+    if (n > 2)
     {
-        int k = cnt / 2;
-        for (int i = low; i < low + k; ++i)
-        {
-            if ((increasing && list->at(i)->rect.h > list->at(i + k)->rect.h) || (!increasing && list->at(i)->rect.h < list->at(i + k)->rect.h))
-            {
-                SDL_Rect rectOne = list->at(i + k)->rect;
-                SDL_Rect rectTwo = list->at(i)->rect;
-
-                // sets colors
-                list->at(i + k)->red = true;
-                list->at(i)->red = true;
-                if (renderFunc)
-                {
-                    renderFunc();
-                }
-                list->at(i + k)->red = false;
-                list->at(i)->red = false;
-
-                // finishes swap
-                rectOne.x = i;
-                rectTwo.x = i + k;
-                list->at(i + k)->rect = rectTwo;
-                list->at(i)->rect = rectOne;
-            }
-        }
-        bitonicMerge(list, low, k, increasing, renderFunc);
-        bitonicMerge(list, low + k, k, increasing, renderFunc);
+        // left
+        customHelper(list, 0, k, renderFunc);
+        // right
+        customHelper(list, k, n - 1, renderFunc);
     }
+    merge(list, k, renderFunc, start, start + k - 1, start + n - 1);
 }
 
-void algo::bitonicSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int low, int cnt, bool increasing, std::function<void()> renderFunc)
+void algo::customHelper(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int start, int n, std::function<void()> renderFunc)
 {
-    if (cnt > 1)
-    {
-        int k = cnt / 2;
-        bitonicSort(list, low, k, true, renderFunc);
-        bitonicSort(list, low + k, k, false, renderFunc);
-        bitonicMerge(list, low, cnt, increasing, renderFunc);
-    }
-}
-
-void algo::bitonicSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, std::function<void()> renderFunc)
-{
-    bitonicSort(list, 0, width, true, renderFunc);
+    quick(list, start, n, renderFunc);
 }

@@ -17,7 +17,7 @@ public:
         insertion = 7,
         selection = 8,
         radix = 9,
-        bitonic = 10
+        custom = 10
     };
     events();
     void handleEvents();
