@@ -141,27 +141,40 @@ void window::renderText()
 {
     if (m_text == "")
     {
-
         return;
     }
-    // creates and frees textSurface
+
     SDL_Color textColor = {255, 255, 255, 255};
     SDL_Surface *textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), textColor);
+
+    if (!textSurface) // Check if the surface was created successfully
+    {
+        std::cout << "Failed to create text surface: " << TTF_GetError() << std::endl;
+        return;
+    }
+
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(m_ren.get(), textSurface);
-    SDL_FreeSurface(textSurface);
-    // text itself
+    SDL_FreeSurface(textSurface); // Free the surface after creating the texture
+
+    if (!textTexture) // Check if the texture was created successfully
+    {
+        std::cout << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
+        return;
+    }
+
     int textWidth, textHeight;
     SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
     SDL_Rect textRect = {320 - textWidth / 2, 240 - textHeight / 2, textWidth, textHeight};
 
     // Render the text
     SDL_RenderCopy(m_ren.get(), textTexture, NULL, &textRect);
+    SDL_DestroyTexture(textTexture); // Free the texture after rendering
 }
 
 void window::addTime(std::string sort, Uint64 finishTime)
 {
 
-    if (sort.length() < 0)
+    if (sort.length() <= 0)
     {
         m_text = "";
         return;
@@ -187,4 +200,5 @@ int window::findFontSize(std::string &text, SDL_Rect rect)
         }
         SDL_Color color = {0, 0, 0, 255};
     }
+    return -1;
 }
