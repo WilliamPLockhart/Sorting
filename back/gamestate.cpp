@@ -33,10 +33,10 @@ void gamestate::run()
 
 void gamestate::update()
 {
-    bool sorted = false;
+
     if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
     {
-        callAlgo(sorted);
+        callAlgo();
     }
     else
     {
@@ -111,8 +111,9 @@ void gamestate::setButtons()
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 }
-void gamestate::callAlgo(bool sorted)
+void gamestate::callAlgo()
 {
+    bool sort = true;
     if (!m_eventOBJ->buttonFlag)
         return;
 
@@ -142,16 +143,15 @@ void gamestate::callAlgo(bool sorted)
         case events::eventButtonType::shuffle:
             sortTitle = "Shuffle";
             m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
+            sort = false;
             break;
         case events::eventButtonType::bubble:
             sortTitle = "Bubble";
             m_algOBJ->bubbleSort(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-            sorted = true;
             break;
         case events::eventButtonType::merge:
             sortTitle = "Merge";
             m_algOBJ->mergeSort(m_entities, m_winOBJ->windowWidth, handleEventsAndRender, 0, m_winOBJ->windowWidth - 1);
-            sorted = true;
             break;
         case events::eventButtonType::bogo:
             sortTitle = "Bogo";
@@ -160,27 +160,22 @@ void gamestate::callAlgo(bool sorted)
         case events::eventButtonType::quick:
             sortTitle = "Quick";
             m_algOBJ->quick(m_entities, 0, m_winOBJ->windowWidth - 1, handleEventsAndRender);
-            sorted = true;
             break;
         case events::eventButtonType::insertion:
             sortTitle = "Insertion";
             m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-            sorted = true;
             break;
         case events::eventButtonType::selection:
             sortTitle = "Selection";
             m_algOBJ->selection(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-            sorted = true;
             break;
         case events::eventButtonType::radix:
             sortTitle = "Radix";
             m_algOBJ->radix(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-            sorted = true;
             break;
         case events::eventButtonType::custom:
             sortTitle = "Quick Merge";
             m_algOBJ->custom(m_entities, 0, m_winOBJ->windowWidth, handleEventsAndRender);
-            sorted = true;
             break;
         default:
             std::cout << "m_eventOBJ->buttonFlag value: " << m_eventOBJ->buttonFlag << " not defined" << std::endl;
@@ -195,13 +190,10 @@ void gamestate::callAlgo(bool sorted)
         m_eventOBJ->buttonFlag = events::eventButtonType::nothing;
     }
 
-    if (sorted)
+    if (sort)
     {
-        if (!sortTitle.empty())
-        {
-            sortTitle += " Sort";
-        }
         Uint64 endtime = SDL_GetTicks64() - startTime;
+        m_algOBJ->checkSorted(m_entities, handleEventsAndRender);
         m_winOBJ->addTime(sortTitle, endtime);
         m_winOBJ->render(1, 1);
         SDL_Delay(600);

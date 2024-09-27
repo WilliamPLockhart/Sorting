@@ -447,3 +447,42 @@ void algo::customHelper(std::shared_ptr<std::vector<std::shared_ptr<item>>> &lis
 {
     quick(list, start, n, renderFunc);
 }
+
+void algo::checkSorted(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, std::function<void()> renderFunc)
+{
+    bool sorted = true;
+    for (int i = 0; i < list->size() - 1; i++)
+    {
+        if (!sorted)
+            break;
+        list->at(i)->red = true;
+        list->at(i + 1)->red = true;
+        if (renderFunc)
+            renderFunc();
+
+        list->at(i)->red = false;
+        list->at(i + 1)->red = false;
+        if (list->at(i)->rect.h <= list->at(i + 1)->rect.h)
+        {
+
+            list->at(i)->green = true;
+            list->at(i + 1)->green = true;
+            if (renderFunc)
+                renderFunc();
+        }
+        else
+        {
+            sorted = false;
+        }
+    }
+    SDL_Delay(100);
+
+    for (auto i : *list)
+    {
+        i->red = false;
+        i->green = false;
+    }
+    if (renderFunc)
+        renderFunc();
+    return;
+}

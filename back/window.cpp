@@ -81,52 +81,40 @@ void window::render(bool sound, bool sorted)
     SDL_RenderClear(m_ren.get());
 
     SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // Set default color to white
-    if (sorted)
+
+    for (const auto &i : *m_entities)
     {
-        // Render each rectangle one by one in green with a delay
-        SDL_SetRenderDrawColor(m_ren.get(), 0, 255, 0, 255); // Set color to green
 
-        for (const auto &i : *m_entities)
+        if (i->red)
         {
-            SDL_RenderFillRect(m_ren.get(), &i->rect);
-            SDL_RenderPresent(m_ren.get());
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255); // Set color to red
+        }
+        else if (i->green)
+        {
+            SDL_SetRenderDrawColor(m_ren.get(), 0, 255, 0, 255); // Set color to green
+        }
+        else
+        {
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // Set color to white
+        }
 
-            // Delay to create the effect of rendering rectangles one by one
-            SDL_Delay(.1);
+        if (sound)
+        {
+        }
+        SDL_RenderFillRect(m_ren.get(), &i->rect);
+    }
+    for (auto i : listEvents)
+    {
+        if (i.tex)
+        {
+        }
+        else
+        {
+            SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255); // Set color to red
+            SDL_RenderFillRect(m_ren.get(), &i.rect);
         }
     }
-    else
-    {
-        for (const auto &i : *m_entities)
-        {
 
-            if (i->red)
-            {
-                SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255); // Set color to red
-            }
-            else
-            {
-                SDL_SetRenderDrawColor(m_ren.get(), 255, 255, 255, 255); // Set color to white
-            }
-
-            if (sound)
-            {
-            }
-            SDL_RenderFillRect(m_ren.get(), &i->rect);
-        }
-        for (auto i : listEvents)
-        {
-            if (i.tex)
-            {
-                // to do render the texture
-            }
-            else
-            {
-                SDL_SetRenderDrawColor(m_ren.get(), 255, 0, 0, 255); // Set color to red
-                SDL_RenderFillRect(m_ren.get(), &i.rect);
-            }
-        }
-    }
     renderText();
     SDL_RenderPresent(m_ren.get());
 }

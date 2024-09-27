@@ -11,6 +11,7 @@ struct item
 {
     SDL_Rect rect;
     bool red;
+    bool green;
 };
 
 struct clickAble
