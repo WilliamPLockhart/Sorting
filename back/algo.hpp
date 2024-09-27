@@ -35,6 +35,7 @@ public:
     void countSort(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int width, int exp, std::function<void()> renderFunc);
     void custom(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int start, int n, std::function<void()> renderFunc);
     void customHelper(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, int start, int n, std::function<void()> renderFunc);
+    void checkSorted(std::shared_ptr<std::vector<std::shared_ptr<item>>> &list, std::function<void()> renderFunc);
 
 private:
 };

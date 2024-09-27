@@ -1,5 +1,6 @@
 #include "gamestate.hpp"
-
+#include <unordered_map>
+#include <functional>
 gamestate::gamestate()
     : m_winOBJ(std::make_shared<window>("Hello SDL", 1080, 720, 0)),
       m_eventOBJ(std::make_unique<events>()),
@@ -24,9 +25,8 @@ void gamestate::run()
         m_eventOBJ->handleEvents();
         update();
         if (!m_running)
-        {
             break;
-        }
+
         m_winOBJ->render();
     }
 }
@@ -111,113 +111,99 @@ void gamestate::setButtons()
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 }
-
 void gamestate::callAlgo(bool sorted)
 {
-    if (m_eventOBJ->buttonFlag)
-    {
-        auto handleEventsAndRender = [this]()
-        {
-            m_eventOBJ->handleEvents();
-            if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
-            {
-                m_winOBJ->render();
-            }
-        };
+    if (!m_eventOBJ->buttonFlag)
+        return;
 
-        m_winOBJ->addTime("", 0);
-        Uint64 startTime = SDL_GetTicks64();
-        std::string sortTitle;
-        // end app
-        if (m_eventOBJ->buttonFlag == events::eventButtonType::end)
+    auto handleEventsAndRender = [this]()
+    {
+        m_eventOBJ->handleEvents();
+        if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
         {
-            m_running = false;
+            m_winOBJ->render();
         }
-        // shuffle array
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::shuffle)
+    };
+
+    m_winOBJ->addTime("", 0);
+    Uint64 startTime = SDL_GetTicks64();
+    std::string sortTitle;
+
+    if (m_eventOBJ->buttonFlag == events::eventButtonType::end)
+    {
+        m_running = false;
+        return;
+    }
+
+    auto performSorting = [&](events::eventButtonType type)
+    {
+        switch (type)
         {
+        case events::eventButtonType::shuffle:
             sortTitle = "Shuffle";
             m_algOBJ->shuffle(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-        }
-        // bubble sort
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::bubble)
-        {
+            break;
+        case events::eventButtonType::bubble:
             sortTitle = "Bubble";
             m_algOBJ->bubbleSort(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
             sorted = true;
-        }
-        // merge sort
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::merge)
-        {
+            break;
+        case events::eventButtonType::merge:
             sortTitle = "Merge";
             m_algOBJ->mergeSort(m_entities, m_winOBJ->windowWidth, handleEventsAndRender, 0, m_winOBJ->windowWidth - 1);
             sorted = true;
-        }
-        // bogo sort
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::bogo)
-        {
+            break;
+        case events::eventButtonType::bogo:
             sortTitle = "Bogo";
             m_algOBJ->bogo(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-        }
-        // quick
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::quick)
-        {
+            break;
+        case events::eventButtonType::quick:
             sortTitle = "Quick";
             m_algOBJ->quick(m_entities, 0, m_winOBJ->windowWidth - 1, handleEventsAndRender);
             sorted = true;
-        }
-        // insertion
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::insertion)
-        {
+            break;
+        case events::eventButtonType::insertion:
             sortTitle = "Insertion";
             m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
             sorted = true;
-        }
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::selection)
-        {
+            break;
+        case events::eventButtonType::selection:
             sortTitle = "Selection";
             m_algOBJ->selection(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
             sorted = true;
-        }
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::insertion)
-        {
-            sortTitle = "Insertion";
-            m_algOBJ->insertion(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
-            sorted = true;
-        }
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::radix)
-        {
+            break;
+        case events::eventButtonType::radix:
             sortTitle = "Radix";
             m_algOBJ->radix(m_entities, m_winOBJ->windowWidth, handleEventsAndRender);
             sorted = true;
-        }
-        else if (m_eventOBJ->buttonFlag == events::eventButtonType::custom)
-        {
-            sortTitle = "Qucik Merge";
+            break;
+        case events::eventButtonType::custom:
+            sortTitle = "Quick Merge";
             m_algOBJ->custom(m_entities, 0, m_winOBJ->windowWidth, handleEventsAndRender);
             sorted = true;
-        }
-        // if buttonFlag is not blank and the condition is not listed
-        else
-        {
+            break;
+        default:
             std::cout << "m_eventOBJ->buttonFlag value: " << m_eventOBJ->buttonFlag << " not defined" << std::endl;
+            break;
         }
-        if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+    };
+
+    performSorting(m_eventOBJ->buttonFlag);
+
+    if (m_eventOBJ->buttonFlag != events::eventButtonType::end)
+    {
+        m_eventOBJ->buttonFlag = events::eventButtonType::nothing;
+    }
+
+    if (sorted)
+    {
+        if (!sortTitle.empty())
         {
-            m_eventOBJ->buttonFlag = events::eventButtonType::nothing;
+            sortTitle += " Sort";
         }
-        // renders the green for sorted
-        if (sorted)
-        {
-            if (sortTitle.length() > 0)
-            {
-                sortTitle += " Sort";
-            }
-            Uint64 endtime = SDL_GetTicks64();
-            endtime = endtime - startTime;
-            m_winOBJ->addTime(sortTitle, endtime);
-            m_winOBJ->render(1, 1);
-            SDL_Delay(600);
-        }
+        Uint64 endtime = SDL_GetTicks64() - startTime;
+        m_winOBJ->addTime(sortTitle, endtime);
+        m_winOBJ->render(1, 1);
+        SDL_Delay(600);
     }
 }
