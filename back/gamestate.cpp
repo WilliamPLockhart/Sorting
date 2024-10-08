@@ -18,6 +18,7 @@ gamestate::gamestate()
     m_running = true;
 }
 
+// main game loop
 void gamestate::run()
 {
     while (m_running)
@@ -31,6 +32,7 @@ void gamestate::run()
     }
 }
 
+// checks if the game is over, calls the sorting algo function
 void gamestate::update()
 {
 
@@ -44,6 +46,7 @@ void gamestate::update()
     }
 }
 
+// creates a vector of rectangles in ascending order
 void gamestate::generateVect()
 {
     int size = m_winOBJ->windowWidth;
@@ -66,6 +69,7 @@ void gamestate::generateVect()
     }
 }
 
+// generates the buttons that the user can click on
 void gamestate::setButtons()
 {
     // adds the shuffle button the clickAble list
@@ -111,6 +115,8 @@ void gamestate::setButtons()
     m_winOBJ->listEvents = m_listEvents;
     m_eventOBJ->listEvents = m_listEvents;
 }
+
+// todo create struct array of function pointer, id, and title. use for loop to go trhough and call function.
 void gamestate::callAlgo()
 {
     bool sort = true;

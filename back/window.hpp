@@ -1,6 +1,7 @@
 #pragma once
 #include "global.h"
 #include <SDL2/SDL_ttf.h>
+#include <pthread.h>
 class window
 {
 public:
